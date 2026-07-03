@@ -11,7 +11,6 @@
 
 set -euo pipefail
 
-
 # ROS 2のディストリビューション
 ROS_DISTRO="humble"
 
@@ -22,12 +21,20 @@ sudo -v
 . /etc/os-release
 UBUNTU_CODENAME="${UBUNTU_CODENAME:-$VERSION_CODENAME}"
 
-# パッケージリストを更新し、必要なツールをインストール
+# パッケージリストの更新
 sudo apt update
-sudo apt install -y curl software-properties-common python3-rosdep
+
+# Universeリポジトリ有効化に必要なツールのインストール
+sudo apt install -y curl software-properties-common
 
 # UbuntuのUniverseリポジトリを有効化
 sudo add-apt-repository -y universe
+
+# Universe有効化後のパッケージリスト更新
+sudo apt update
+
+# rosdepのインストール
+sudo apt install -y python3-rosdep
 
 # ROS 2のGPGキーを追加
 sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key \
@@ -37,8 +44,10 @@ sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key \
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu ${UBUNTU_CODENAME} main" \
   | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
 
-# パッケージリストを更新し、既存パッケージをアップグレード
+# ROS 2リポジトリ追加後のパッケージリスト更新
 sudo apt update
+
+# 既存パッケージのアップグレード
 sudo apt upgrade -y
 
 # ROS 2 Desktop版をインストール
@@ -56,6 +65,7 @@ source "/opt/ros/${ROS_DISTRO}/setup.bash"
 if [ ! -f /etc/ros/rosdep/sources.list.d/20-default.list ]; then
   sudo rosdep init
 fi
+
 rosdep update
 
 # 完了メッセージ
