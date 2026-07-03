@@ -34,7 +34,7 @@ sudo add-apt-repository -y universe
 sudo apt update
 
 # rosdepのインストール
-sudo apt install -y python3-rosdep
+sudo apt install -y python3-rosdep2
 
 # ROS 2のGPGキーを追加
 sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key \
